@@ -5,56 +5,33 @@ import climanu
 import subprocess
 import os
 import csv
+""" this function create manu to show on terminal """
 def makeManu(title, console_text,context,option):
     mymanu=climanu.SimpleManu()
     mymanu.setManu(options=option,title=title,console_text=console_text,context=context)
     mymanu.showManu()
     return mymanu
-def checkAndChangeMode(interface):
-    try:
-        # Run the iwconfig command and suppress output
-        result = subprocess.run(
-            ["iwconfig", interface],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            text=True
-        )
-        
-        # Check the return code: if 0, the command ran successfully
-        if result.returncode == 0:
-            # Now, let's check if "Mode:Monitor" is in the output
-            # We run it again to get the actual output since we suppressed it above
-            result_output = subprocess.run(
-                ["iwconfig", interface],
-                capture_output=True,
-                text=True
-            )
-            if "Mode:Monitor" in result_output.stdout:
-                print("\033[94mmonter mode already started.")
-            else:
-                print("\033[92starting monitor mode...")
-                os.system("sudo iwconfig wlan0 mode monitor")
-        else:
-            return False
-    except Exception as e:
-        print(f"Error checking monitor mode for {interface}: {e}")
-        return False
 
+""" show all connected Devices from selected_bssid """
 def show_conncted_station(interface,selcted_bssid):
-    swifi = sudowifi.SudoWifi()
-    stations_mac = swifi.scan_with_bssid(interface,selcted_bssid)
-    stations_options=[]
-    stations_options.append("All")
+    swifi = sudowifi.SudoWifi() # All function are created on sudowifi
+    stations_mac = swifi.scan_with_bssid(interface,selcted_bssid) # this scan all devices which is connected to selcted bssid
+    stations_options=[] # create empty array to append manu option
+    stations_options.append("All") # app first option
+    ''' here we grab (station mac/connected devices mac) and iner to manu option '''
     for stataion in stations_mac:
         stations_options.append(stataion['Station MAC'])
     stations_options.append("re-scan")
     stations_options.append("back")
+    
+    ''' check if no devices is connected and not in manu if devices is 0 or note then it's redirct to past manu '''
     if(len(stations_options) > 3):
         selcted_device=makeManu("Devices","Select","Select Device for Deauth Attack",stations_options).getUserinput()
         if(selcted_device == 're-scan'):
-            show_conncted_station(interface,selcted_bssid)
+            show_conncted_station(interface,selcted_bssid) # run rescan command
         elif(selcted_device == 'back'):
-            pass
+            networks_array=swifi.scan_wifi(interface)
+            show_scan_wifi(networks_array,interface)
         elif(selcted_device == 'All'):
             swifi.deauth(interface,selcted_bssid,is_all=True)
         else:
@@ -64,6 +41,7 @@ def show_conncted_station(interface,selcted_bssid):
         time.sleep(3)
         networks_array=swifi.scan_wifi(interface)
         show_scan_wifi(networks_array,interface)
+''' this function show scan wifi '''
 def show_scan_wifi(network_array,interface):
     ''' make available network to show as manu '''
     scan_result_array = network_array
@@ -82,6 +60,9 @@ def show_scan_wifi(network_array,interface):
         list_wifi_interfaces()
     else : 
         show_conncted_station(interface,scan_result_array[user_network_input.getUserinputIndex()]['BSSID'])
+
+
+''' it grep and show how many interface available and ask to select one '''
 def list_wifi_interfaces():
     ''' Interface access and available interface check '''
     interface_options = []
@@ -96,7 +77,7 @@ def list_wifi_interfaces():
 #    checkAndChangeMode(user_input_interface.getUserinput())
     ''' scan network from selcted interface '''
     swifi = sudowifi.SudoWifi()
-    scan_result_array = swifi.scan_wifi(user_input_interface.getUserinput())
+    scan_result_array = swifi.scan_live_networks(user_input_interface.getUserinput())
     show_scan_wifi(scan_result_array,user_input_interface.getUserinput())
 #List Wi-Fi interfaces
 try : 
@@ -104,8 +85,3 @@ try :
 except Exception as e:
     print(e)
     print("\033[92mNo interface found.\033[0m")
-# Run the scan and print available networks
-#wifi_networks = scan_wifi()
-#for network in wifi_networks:
-#    print(f"SSID: {network['SSID']}, Signal: {network['Signal']} dBm")
-
