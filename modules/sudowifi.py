@@ -85,7 +85,7 @@ class SudoWifi:
             while True :
                 time.sleep(2)
                 os.system("clear")
-                print(f"\033[92mscaning for connected stations from \033[93m{bssid}")
+                print(f"\033[92mscanning for connected stations from \033[93m{bssid}")
                 print("\033[91m--"*40)
                 # Parse the output CSV for connected devices
                 devices = []
@@ -105,8 +105,6 @@ class SudoWifi:
                                 device_info = {
                                     "Station MAC": fields[0].strip(),
                                 }
-                                #print(f"\033[92mscaning for connected stations from {bssid}")
-                                #print("\033[91m--"*40)
                                 print(f"\033[92m==> \033[93m{fields[0].strip()}\033[0m",end="\n")
                                 #print(f"\033[92mWhent get your target use (\033[91mCTRL+C\033[92m)\033[0m")
                                 devices.append(device_info)
@@ -114,8 +112,8 @@ class SudoWifi:
                                 #print(show_device)
                 except FileNotFoundError:
                     print("Output file not found. Ensure airodump-ng is producing output.")
-                
-
+                print("\033[93mScanning...\033[0m")
+                print("\033[91m--\033[0m"*40)
                 print(f"\n\033[92mWhen you get your target use (\033[91mCTRL+C\033[92m)\033[0m")
 
         except KeyboardInterrupt:
@@ -183,13 +181,13 @@ class SudoWifi:
                     # Clear screen and display networks
                     print("\033[H\033[J")  # Clears the terminal screen
                     print("Nearby Wi-Fi Networks:")
-                    print("-" * 40)
+                    print("--" * 40)
                     if(len(seen_networks)==0):
                         print(f"\033[93mScanning...")
                     else:
                         for bssid, info in seen_networks.items():
                             print(f"\033[94mESSID:\033[91m{info['ESSID']} \033[92mChannel:\033[94m{info['Channel']}   \033[92mSignal:\033[94m{info['Signal']}  \033[92mBSSID: \033[93m{bssid}\n")
-                            #print("-" * 40)
+                    print("\033[0m--" * 40)
                     # Keep CTRL+C message at bottom
                     print("\033[92mWhen you find your target use (\033[91mCTRL+C\033[92m)\033[0m\n", end="\r", flush=True)
 
