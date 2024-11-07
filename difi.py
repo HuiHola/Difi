@@ -1,15 +1,27 @@
 import time
 from modules import sudowifi
 from pywifi import PyWiFi, const, Profile
+from modules import showbanner
 import climanu
 import subprocess
 import os
 import csv
+
+Error = "[ \033[91mERROR\033[0m ]"
+Info = "[ \033[92mINFO\033[0m ]"
+Worn = "[ \033[93mWorn\033[0m ]"
+banner=showbanner.showbanner()
 """ this function create manu to show on terminal """
 def makeManu(title, console_text,context,option):
-    mymanu=climanu.SimpleManu()
-    mymanu.setManu(options=option,title=title,console_text=console_text,context=context)
-    mymanu.showManu()
+    try :
+        os.system("clear")
+        banner.showbanner()
+        mymanu=climanu.SimpleManu()
+        mymanu.setManu(options=option,title=title,console_text=console_text,context=context)
+        mymanu.showManu()
+    except KeyboardInterrupt:
+        print("\033[91mexit...\033[0m")
+        os.system("rm -rf *.csv")
     return mymanu
 
 """ show all connected Devices from selected_bssid """
@@ -30,7 +42,7 @@ def show_conncted_station(interface,selcted_bssid):
         if(selcted_device == 're-scan'):
             show_conncted_station(interface,selcted_bssid) # run rescan command
         elif(selcted_device == 'back'):
-            networks_array=swifi.scan_wifi(interface)
+            networks_array=swifi.scan_live_networks(interface)
             show_scan_wifi(networks_array,interface)
         elif(selcted_device == 'All'):
             swifi.deauth(interface,selcted_bssid,is_all=True)
@@ -39,7 +51,7 @@ def show_conncted_station(interface,selcted_bssid):
     else:
         print("\033[91mNo devices found. redirct to AP manu\033[0m")
         time.sleep(3)
-        networks_array=swifi.scan_wifi(interface)
+        networks_array=swifi.scan_live_networks(interface)
         show_scan_wifi(networks_array,interface)
 ''' this function show scan wifi '''
 def show_scan_wifi(network_array,interface):
@@ -54,7 +66,7 @@ def show_scan_wifi(network_array,interface):
     user_network_input = makeManu("Access Points","Select","Select Access Point",scan_option_array)
     if(user_network_input.getUserinput() == "re-scan"):
         swifi = sudowifi.SudoWifi()
-        scan_result_array = swifi.scan_wifi(interface)
+        scan_result_array = swifi.scan_live_networks(interface)
         show_scan_wifi(scan_result_array,interface)
     elif(user_network_input.getUserinput() == 'back'):
         list_wifi_interfaces()
@@ -79,9 +91,14 @@ def list_wifi_interfaces():
     swifi = sudowifi.SudoWifi()
     scan_result_array = swifi.scan_live_networks(user_input_interface.getUserinput())
     show_scan_wifi(scan_result_array,user_input_interface.getUserinput())
+
+def start():
+    banner.showbanner()
+    list_wifi_interfaces()
 #List Wi-Fi interfaces
 try : 
-    list_wifi_interfaces()
+    start()
 except Exception as e:
-    print(e)
-    print("\033[92mNo interface found.\033[0m")
+    if(e.args[0]==2):
+        print(f"\033[0m{Worn} \033[93mNo interface found.\033[0m")
+        print(f"{Info} \033[92mPlug the wifi Adapter.")
