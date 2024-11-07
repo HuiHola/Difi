@@ -21,7 +21,7 @@ def makeManu(title, console_text,context,option):
         mymanu.showManu()
     except KeyboardInterrupt:
         print("\033[91mexit...\033[0m")
-        os.system("rm -rf *.csv")
+        #os.system("rm -rf *.csv")
     return mymanu
 
 """ show all connected Devices from selected_bssid """
