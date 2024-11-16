@@ -3,6 +3,7 @@ import time
 import signal
 import os
 import csv
+from mac_vendor_lookup import MacLookup,VendorNotFoundError
 
 class SudoWifi:
 
@@ -105,7 +106,11 @@ class SudoWifi:
                                 device_info = {
                                     "Station MAC": fields[0].strip(),
                                 }
-                                print(f"\033[92m==> \033[93m{fields[0].strip()}\033[0m",end="\n")
+                                try:
+                                    device_name_by_mac = MacLookup().lookup(fields[0].strip())
+                                except VendorNotFoundError:
+                                    device_name_by_mac = "Not recgnize."
+                                print(f"\033[92m==> \033[93m{fields[0].strip()} \033[92m==> \033[91m{device_name_by_mac}\033[0m",end="\n")
                                 #print(f"\033[92mWhent get your target use (\033[91mCTRL+C\033[92m)\033[0m")
                                 devices.append(device_info)
                                 #show_device.add(fields[0].strip())

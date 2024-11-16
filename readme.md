@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge" alt="Version Badge">
+  <img src="https://img.shields.io/badge/Version-1.1.0-green?style=for-the-badge" alt="Version Badge">
   <img src="https://img.shields.io/badge/Author-HuiHola-blue?style=for-the-badge" alt="Author Badge">
   <img src="https://img.shields.io/badge/Platform-Linux-important?style=for-the-badge" alt="Platform Badge">
   <img src="https://img.shields.io/badge/Dependencies-Airodump--ng%2C%20Aireplay--ng-orange?style=for-the-badge" alt="Dependencies Badge">

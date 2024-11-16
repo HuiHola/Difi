@@ -6,7 +6,15 @@ import climanu
 import subprocess
 import os
 import csv
-
+from mac_vendor_lookup import MacLookup
+from ping3 import ping
+is_connected = ping("google.com")
+if(is_connected):
+    print("\033[92mUpdateing internal modules...")
+    mac = MacLookup()
+    mac.update_vendors()  # <- This can take a few seconds for the download
+else:
+    pass
 Error = "[ \033[91mERROR\033[0m ]"
 Info = "[ \033[92mINFO\033[0m ]"
 Worn = "[ \033[93mWorn\033[0m ]"
