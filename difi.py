@@ -8,17 +8,24 @@ import os
 import csv
 from mac_vendor_lookup import MacLookup
 from ping3 import ping
-is_connected = ping("google.com")
-if(is_connected):
-    print("\033[92mUpdateing internal modules...")
-    mac = MacLookup()
-    mac.update_vendors()  # <- This can take a few seconds for the download
-else:
-    pass
-Error = "[ \033[91mERROR\033[0m ]"
-Info = "[ \033[92mINFO\033[0m ]"
-Worn = "[ \033[93mWorn\033[0m ]"
+
+
+Error = "\033[0m[ \033[91mERROR\033[0m ]"
+Info = "\033[0m[ \033[92mINFO\033[0m ]"
+Worn = "\033[0m[ \033[93mWorn\033[0m ]"
 banner=showbanner.showbanner()
+def update_list():
+    is_connected = ping("google.com")
+    if(is_connected):
+        print(f"{Info} \033[92mUpdateing internal modules...")
+        mac = MacLookup()
+        mac.update_vendors()  # <- This can take a few seconds for the download
+    else:
+        pass
+#Error = "[ \033[91mERROR\033[0m ]"
+#Info = "[ \033[92mINFO\033[0m ]"
+#Worn = "[ \033[93mWorn\033[0m ]"
+#banner=showbanner.showbanner()
 """ this function create manu to show on terminal """
 def makeManu(title, console_text,context,option):
     try :
@@ -102,6 +109,7 @@ def list_wifi_interfaces():
 
 def start():
     banner.showbanner()
+    update_list()
     list_wifi_interfaces()
 #List Wi-Fi interfaces
 try : 
