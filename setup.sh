@@ -87,7 +87,7 @@ install_python_package() {
     echo -e "${YELLOW}Checking if $package_name is installed...${NC}"
     if ! python3 -m pip show "$package_name" &> /dev/null; then
         echo -e "${YELLOW}$package_name is not installed. Installing $package_name...${NC}"
-        python3 -m pip install "$package_name"
+        python3 -m pip install "$package_name --break-system-packages"
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}$package_name installed successfully.${NC}"
         else
