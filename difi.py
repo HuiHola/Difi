@@ -17,9 +17,14 @@ banner=showbanner.showbanner()
 def update_list():
     is_connected = ping("google.com")
     if(is_connected):
-        print(f"{Info} \033[92mUpdateing internal modules...")
-        mac = MacLookup()
-        mac.update_vendors()  # <- This can take a few seconds for the download
+        update_confirmation = input("\033[92mDo You Want to update Internal Modules (y/n) \033[0m");
+        if(update_confirmation == "y" or update_confirmation == "Y" or update_confirmation == "yes" or update_confirmation == "Yes"):
+
+            print(f"{Info} \033[92mUpdateing internal modules...")
+            mac = MacLookup()
+            mac.update_vendors()  # <- This can take a few seconds for the download
+        else:
+            pass
     else:
         pass
 #Error = "[ \033[91mERROR\033[0m ]"
