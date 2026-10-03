@@ -51,7 +51,10 @@
 ---
 
 ##  Installation
-
+- **Note** : switch to super user first then run command
+```bash
+sudo su
+```
 1. **Clone the repository**  
 ```bash
 git clone https://github.com/HuiHola/Difi.git
@@ -76,7 +79,11 @@ pip3 install -r requirements.txt
 ```bash
 python3 difi.py
 ```
-- **Note:** If installation step show error then switch to super user then follow the step
+- **Note:** After your work done menually change wifi adapter mode to managed
+```bash
+airmon-ng stop <your-interface-name>
+```
+
 
 <p align="center"> <strong>Made with passion for network security enthusiasts</strong> </p>
 <p align="center"> <i>Difi: Empowering responsible network security education and practice.</i><br> <i>For any questions or support, please reach out on Telegram or GitHub.</i></p>

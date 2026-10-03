@@ -47,6 +47,8 @@ def makeManu(title, console_text,context,option):
         mymanu.showManu()
     except KeyboardInterrupt:
         print("\033[91mexit...\033[0m")
+        print("\033[91mNote:Please change Monitor mode Manually")
+        print("\033[93mCommand : airmon-ng stop <your-interface>\033[0m")
         #os.system("rm -rf *.csv")
     return mymanu
 
@@ -115,7 +117,6 @@ def list_wifi_interfaces():
     #checkAndChangeMode(user_input_interface.getUserinput())
     os.system(f"sudo airmon-ng start {user_input_interface.getUserinput()}")
     Iface = checkWlan1orMon(user_input_interface.getUserinput())
-    print(Iface)
     ''' scan network from selcted interface '''
     swifi = sudowifi.SudoWifi()
     scan_result_array = swifi.scan_live_networks(Iface)
