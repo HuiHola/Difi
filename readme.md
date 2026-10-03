@@ -55,11 +55,28 @@
 1. **Clone the repository**  
 ```bash
 git clone https://github.com/HuiHola/Difi.git
+```
+2. **Change Direcatory to Difi**
+```bash 
 cd Difi
-chmod +x setup.sh
-./setup.sh
+```
+3. **Create virtual environment**
+```bash
+python3 -m venv .venv
+```
+4. **Activate the environment**
+```bash
+source .venv/bin/activate
+```
+5. **Install Requirements library**
+```bash
+pip3 install -r requirements.txt
+```
+6. **Run difi.py**
+```bash
 python3 difi.py
 ```
+- **Note:** If installation step show error then switch to super user then follow the step
 
 <p align="center"> <strong>Made with passion for network security enthusiasts</strong> </p>
 <p align="center"> <i>Difi: Empowering responsible network security education and practice.</i><br> <i>For any questions or support, please reach out on Telegram or GitHub.</i></p>

